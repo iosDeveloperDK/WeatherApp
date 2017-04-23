@@ -12,7 +12,7 @@
 
 @interface DKInfoTableViewController ()
 
-@property (nonatomic) NSArray<DKInfoModel*>* arrayInfo;
+@property (nonatomic) NSArray* arrayInfo;
 
 @end
 
@@ -25,15 +25,6 @@
     
     [self prepareTableView];
     
-    [[DKCoreDataManager sharedInstance] getAllInfo:^(NSArray<DKInfoModel *> *arrayInfo) {
-       
-        self.arrayInfo = arrayInfo;
-        
-        [self.tableView reloadData];
-        
-    }];
-    
-
 }
 
 -(void)prepareTableView {
@@ -46,15 +37,18 @@
 #pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-
-    return self.arrayInfo.count;
+    
+    id <NSFetchedResultsSectionInfo> sectionInfo = ([DKCoreDataManager sharedInstance].fetchedResultsController).sections[section];
+    
+    return sectionInfo.numberOfObjects;
+    
 }
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-
+    
     DKInfoTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"DKInfoTableViewCell"];
     
-    DKInfoModel* info = self.arrayInfo[indexPath.row];
+    DKInfoModel* info = [[DKCoreDataManager sharedInstance]convertInfoEntityToModelAtIndex:indexPath];
     
     cell.labelCity.text = [NSString stringWithFormat:@"Adress: %@, %@",info.city,info.adress];
     cell.labelTemp.text = [NSString stringWithFormat:@"Temperature: %@",info.temp];
@@ -64,6 +58,7 @@
     return cell;
     
 }
+
 
 
 @end

@@ -16,13 +16,13 @@
     if (self) {
         
         if (dict) {
-
+            
             NSInteger count = [dict[@"results"][0][@"address_components"] count];
             
             self.city = dict[@"results"][0][@"address_components"][count-2][@"long_name"];
             self.country = dict[@"results"][0][@"address_components"][count-1][@"long_name"];
             self.address = [dict[@"results"][0][@"address_components"][count-3][@"long_name"] stringByAppendingFormat:@" %@",dict[@"results"][0][@"address_components"][0][@"long_name"]];
-
+            
         }
         
     }
@@ -40,9 +40,9 @@
         
         if (dict) {
             
-            self.type = [[[[dict objectForKey:@"weather"] lastObject] objectForKey:@"description"] uppercaseString];
+            self.type = [[dict[@"weather"] lastObject][@"description"] uppercaseString];
             
-            self.temp = [NSString stringWithFormat:@"%.0f",[[[dict objectForKey:@"main"] objectForKey:@"temp"] floatValue]];
+            self.temp = [NSString stringWithFormat:@"%.0f º",[dict[@"main"][@"temp"] floatValue]];
             
         }
         
@@ -74,13 +74,13 @@
 
 //get formated date
 -(NSString*)dateString {
-
+    
     NSDateFormatter* dateF = [[NSDateFormatter alloc]init];
     
-    [dateF setDateFormat:@"MM/dd/yyyy HH:mm:ss"];
+    dateF.dateFormat = @"MM/dd/yyyy HH:mm:ss";
     
     _dateString = [dateF stringFromDate:self.date];
-
+    
     return _dateString;
     
 }

@@ -12,11 +12,14 @@
 
 typedef void(^InfoBlock)(NSArray<DKInfoModel*>*arrayInfo);
 
-@interface DKCoreDataManager : NSObject
+@interface DKCoreDataManager : NSObject <NSFetchedResultsControllerDelegate>
 
 //info methods
 -(void)saveInfo:(DKInfoModel*)info;
--(void)getAllInfo:(InfoBlock)infoBlock;
+-(DKInfoModel*)convertInfoEntityToModelAtIndex:(NSIndexPath*)index;
+
+//NSFetchedResultsController
+@property (strong, nonatomic) NSFetchedResultsController<InfoEntity *> *fetchedResultsController;
 
 +(DKCoreDataManager*)sharedInstance;
 

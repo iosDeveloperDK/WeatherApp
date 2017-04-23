@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		92128A8D1EA961D800F1548D /* DKInfoTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92128A8C1EA961D800F1548D /* DKInfoTableViewController.m */; };
 		92128A901EA9625D00F1548D /* DKInfoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 92128A8F1EA9625D00F1548D /* DKInfoTableViewCell.m */; };
+		92287BFF1EACB7EE00D9492A /* DKThemeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 92287BFE1EACB7EE00D9492A /* DKThemeManager.m */; };
 		9256FF3F1EA9352200BD6882 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9256FF3E1EA9352200BD6882 /* main.m */; };
 		9256FF421EA9352200BD6882 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9256FF411EA9352200BD6882 /* AppDelegate.m */; };
 		9256FF481EA9352200BD6882 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9256FF461EA9352200BD6882 /* Main.storyboard */; };
@@ -31,6 +32,8 @@
 		92128A8C1EA961D800F1548D /* DKInfoTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DKInfoTableViewController.m; sourceTree = "<group>"; };
 		92128A8E1EA9625D00F1548D /* DKInfoTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKInfoTableViewCell.h; sourceTree = "<group>"; };
 		92128A8F1EA9625D00F1548D /* DKInfoTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DKInfoTableViewCell.m; sourceTree = "<group>"; };
+		92287BFD1EACB7EE00D9492A /* DKThemeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DKThemeManager.h; sourceTree = "<group>"; };
+		92287BFE1EACB7EE00D9492A /* DKThemeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DKThemeManager.m; sourceTree = "<group>"; };
 		9256FF3A1EA9352100BD6882 /* WeatherApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9256FF3E1EA9352200BD6882 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		9256FF401EA9352200BD6882 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -139,6 +142,8 @@
 				9256FF5B1EA9371100BD6882 /* DKLocationManager.m */,
 				9256FF731EA95A8400BD6882 /* DKCoreDataManager.h */,
 				9256FF741EA95A8400BD6882 /* DKCoreDataManager.m */,
+				92287BFD1EACB7EE00D9492A /* DKThemeManager.h */,
+				92287BFE1EACB7EE00D9492A /* DKThemeManager.m */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -278,6 +283,7 @@
 				9256FF5C1EA9371100BD6882 /* DKLocationManager.m in Sources */,
 				9256FF6B1EA9464900BD6882 /* DKWeatherViewController.m in Sources */,
 				92128A901EA9625D00F1548D /* DKInfoTableViewCell.m in Sources */,
+				92287BFF1EACB7EE00D9492A /* DKThemeManager.m in Sources */,
 				9256FF681EA9417E00BD6882 /* DKSessionManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

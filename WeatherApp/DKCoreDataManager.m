@@ -56,8 +56,8 @@ static NSString * const EntityInfo = @"InfoEntity";
     NSError *error = nil;
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     if (managedObjectContext != nil) {
-        if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        if (managedObjectContext.hasChanges && ![managedObjectContext save:&error]) {
+            NSLog(@"Unresolved error %@, %@", error, error.userInfo);
             abort();
         }
     }
@@ -69,7 +69,9 @@ static NSString * const EntityInfo = @"InfoEntity";
     
     [[NSUserDefaults standardUserDefaults] setObject:@(1) forKey:@"empty"];
     
-    InfoEntity* entity = [NSEntityDescription insertNewObjectForEntityForName:EntityInfo inManagedObjectContext:_managedObjectContext];
+    NSManagedObjectContext *context = (self.fetchedResultsController).managedObjectContext;
+    
+    InfoEntity *entity = [[InfoEntity alloc] initWithContext:context];
     
     entity.city = info.city;
     entity.temp = info.temp;
@@ -81,44 +83,22 @@ static NSString * const EntityInfo = @"InfoEntity";
 }
 
 
--(DKInfoModel*)convertInfoEntity:(InfoEntity*)info {
+-(DKInfoModel*)convertInfoEntityToModelAtIndex:(NSIndexPath*)index {
+    
+    InfoEntity* infoEntity = [self.fetchedResultsController objectAtIndexPath:index];
     
     DKInfoModel*infoObj = [DKInfoModel new];
-
-    infoObj.city = info.city;
-    infoObj.temp = info.temp;
-    infoObj.date = info.time;
-    infoObj.adress = info.adress;
-
+    
+    infoObj.city = infoEntity.city;
+    infoObj.temp = infoEntity.temp;
+    infoObj.date = infoEntity.time;
+    infoObj.adress = infoEntity.adress;
+    
     return infoObj;
     
 }
 
--(void)getAllInfo:(InfoBlock)infoBlock {
-    
-    NSFetchRequest* request = [NSFetchRequest new];
-    
-    NSEntityDescription* entity = [NSEntityDescription entityForName:EntityInfo inManagedObjectContext:self.managedObjectContext];
-    
-    [request setEntity:entity];
-    
-    NSArray* arrayInfo = [self.managedObjectContext executeFetchRequest:request error:nil];
-    
-    NSMutableArray* arrayModel = [NSMutableArray new];
-    
-    for (InfoEntity* info in arrayInfo) {
-        
-        [arrayModel addObject:[self convertInfoEntity:info]];
-        
-    }
-    
-    NSSortDescriptor* sortDate = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:NO];
-    
-    [arrayModel sortUsingDescriptors:@[sortDate]];
-    
-    infoBlock(arrayModel.copy);
-    
-}
+
 
 #pragma mark - CreateCoreData
 
@@ -129,7 +109,7 @@ static NSString * const EntityInfo = @"InfoEntity";
     if (coordinator != nil)
     {
         _managedObjectContext = [[NSManagedObjectContext alloc]initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-        [_managedObjectContext setPersistentStoreCoordinator:coordinator];
+        _managedObjectContext.persistentStoreCoordinator = coordinator;
     }
     return _managedObjectContext;
 }
@@ -168,5 +148,38 @@ static NSString * const EntityInfo = @"InfoEntity";
                                  @"Library"];
     return [NSURL fileURLWithPath:coreDataDirPath];
 }
+
+- (NSFetchedResultsController<InfoEntity *> *)fetchedResultsController {
+    
+    if (_fetchedResultsController != nil) {
+        return _fetchedResultsController;
+    }
+    
+    NSFetchRequest<InfoEntity *> *fetchRequest = InfoEntity.fetchRequest;
+    
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"time" ascending:NO];
+    
+    fetchRequest.sortDescriptors = @[sortDescriptor];
+    
+    NSFetchedResultsController<InfoEntity *> *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+    
+    aFetchedResultsController.delegate = self;
+    
+    NSError *error = nil;
+    if (![aFetchedResultsController performFetch:&error]) {
+        
+        NSLog(@"Unresolved error %@, %@", error, error.userInfo);
+        abort();
+    }
+    
+    _fetchedResultsController = aFetchedResultsController;
+    return _fetchedResultsController;
+}
+
+#pragma mark - NSFetchedResultsControllerDelegate
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
+       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
+      newIndexPath:(NSIndexPath *)newIndexPath {}
 
 @end
