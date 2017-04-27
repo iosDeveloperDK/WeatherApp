@@ -9,6 +9,9 @@
 #import "DKWeatherViewController.h"
 #import "DKCoreDataManager.h"
 
+static NSString * const title = @"Weather";
+static NSString * const cityFormat = @"%@, %@";
+
 @interface DKWeatherViewController ()
 
 @property (weak, nonatomic) IBOutlet UILabel *labelCity;
@@ -22,7 +25,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.title = @"Weather";
+    self.title = title;
 
     [self getCurrentWeather];
     
@@ -48,9 +51,7 @@
         
         [weakSelf.activityView stopActivity];
         
-        self.labelCity.text = [NSString stringWithFormat:@"%@, %@", self.location.country, self.location.city];
-        self.labelDesc.text = weather.type;
-        self.labelTemp.text = weather.temp;
+        [self updateLabelWithBodel:weather];
         
         [[DKCoreDataManager sharedInstance] saveInfo:[[DKInfoModel alloc] initWhithLocation:self.location andWeather:weather]];
         
@@ -62,6 +63,14 @@
         
     } withLocation:self.location];
     
+}
+
+-(void)updateLabelWithBodel:(DKWeatherModel*)model {
+
+    self.labelCity.text = [NSString stringWithFormat:cityFormat, self.location.country, self.location.city];
+    self.labelDesc.text = model.type;
+    self.labelTemp.text = model.temp;
+
 }
 
 @end

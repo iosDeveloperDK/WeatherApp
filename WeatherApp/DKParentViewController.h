@@ -16,6 +16,7 @@
 @property (strong,nonatomic) DKActivityView*activityView;
 
 -(void)showAlertView:(NSString*)message;
+-(void)showAppSetting;
 
 @end
 

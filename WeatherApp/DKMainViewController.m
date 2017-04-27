@@ -9,12 +9,15 @@
 #import "DKMainViewController.h"
 #import "DKWeatherViewController.h"
 
+static NSString * const title = @"Main";
+static NSString * const indetifierVC = @"DKWeatherViewController";
+static NSString * const historyKey = @"empty";
+static NSTimeInterval const duration = 0.4;
+static NSString * const labelLocationFormat = @"%@, %@, %@";
+
 @interface DKMainViewController ()
 
-{
-    DKLocationModel* currenLocation;
-}
-
+@property (strong,nonatomic) DKLocationModel* currenLocation;
 @property (weak, nonatomic) IBOutlet UILabel *labelLocation;
 @property (weak, nonatomic) IBOutlet UIButton *buttonShowWeather;
 @property (weak, nonatomic) IBOutlet UIButton *buttonShowHistory;
@@ -26,7 +29,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.title = @"Main";
+    self.title = title;
     
 }
 
@@ -36,15 +39,13 @@
     
     __weak typeof(self)weakSelf = self;
 
-    [DKLocationManager sharedManager].isDisable ? nil : [self.activityView startActivity];
-    
     [[DKLocationManager sharedManager] getCurrentLocation:^(DKLocationModel *location) {
         
         __strong typeof(self)strongSelf = weakSelf;
 
-        currenLocation = location;
+        self.currenLocation = location;
         
-        strongSelf.labelLocation.text = [NSString stringWithFormat:@"%@, %@, %@", location.country, location.city, location.address];
+        strongSelf.labelLocation.text = [NSString stringWithFormat:labelLocationFormat, location.country, location.city, location.address];
         
         [strongSelf.activityView stopActivity];
         
@@ -56,7 +57,23 @@
 
         [strongSelf.activityView stopActivity];
 
-        [strongSelf showAlertView:@"The internet connection appears to be offline."];
+        [strongSelf showAlertView:[error localizedDescription]];
+        
+    } statusLocation:^(CLAuthorizationStatus status) {
+        
+        switch (status) {
+                
+            case kCLAuthorizationStatusDenied:
+                [weakSelf showAppSetting];
+                break;
+                
+            case kCLAuthorizationStatusAuthorizedAlways:
+                [weakSelf.activityView startActivity];
+                break;
+
+            default:
+                break;
+        }
         
     }];
 
@@ -65,9 +82,9 @@
 
 - (IBAction)actionShowWeather:(UIButton *)sender {
     
-    DKWeatherViewController*vc = [self.storyboard instantiateViewControllerWithIdentifier:@"DKWeatherViewController"];
+    DKWeatherViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier:indetifierVC];
     
-    vc.location = currenLocation;
+    vc.location = self.currenLocation;
     
     [self.navigationController pushViewController:vc animated:YES];
     
@@ -78,7 +95,7 @@
 -(void)showWeatherButtonAnimated {
 
     [UIView transitionWithView:self.buttonShowWeather
-                      duration:0.4
+                      duration:duration
                        options:UIViewAnimationOptionTransitionCrossDissolve
                     animations:^{
                         
@@ -92,7 +109,7 @@
 
     [super viewWillAppear:animated];
     
-    self.buttonShowHistory.hidden = ![[NSUserDefaults standardUserDefaults] boolForKey:@"empty"];
+    self.buttonShowHistory.hidden = ![[NSUserDefaults standardUserDefaults] boolForKey:historyKey];
     
 }
 

@@ -11,10 +11,8 @@
 
 @interface DKLocationManager ()
 
-{
-    LocationBlock _locationBlock;
-    ErrorBlock _errorBlock;
-}
+@property (copy,nonatomic) LocationBlock locationBlock;
+@property (copy,nonatomic) ErrorBlock errorBlock;
 
 @property (nonatomic) CLLocationManager* locationManager;
 
@@ -38,58 +36,32 @@
     return manager;
 }
 
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
+-(CLLocationManager*)locationManager {
+
+    if (!_locationManager) {
         
-        self.locationManager = [[CLLocationManager alloc]init];
+        _locationManager = [[CLLocationManager alloc]init];
         
-        [self.locationManager requestAlwaysAuthorization];
+        [_locationManager requestAlwaysAuthorization];
         
-        self.locationManager.delegate = self;
+        _locationManager.delegate = self;
         
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-        
-        self.isDisable = [self isLocationDisableForApp];
-        
+        _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     }
-    return self;
+    
+    return _locationManager;
+    
 }
 
 #pragma mark - CLLocationDelegate
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations{
     
-    //Нельзя получить адрес Беларуси
-    
-//    CLGeocoder* geoCoder = [CLGeocoder new];
-//    
-//    [geoCoder reverseGeocodeLocation:locations.lastObject completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
-//        
-//        DKLocationModel* location = [DKLocationModel new];
-//        
-//        location.city = placemarks.lastObject.locality;
-//        location.country = placemarks.lastObject.country;
-//        
-//        if (placemarks) {
-//            
-//            _locationBlock(location);
-//            
-//            
-//        }else {
-//            
-//            _errorBlock(error);
-//            
-//        }
-//        
-//    }];
-
     [[DKSessionManager sharedManager] geocoder:locations.lastObject success:^(DKLocationModel *city) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            _locationBlock(city);
+            self.locationBlock(city);
 
         });
         
@@ -97,7 +69,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            _errorBlock(error);
+            self.errorBlock(error);
 
         });
         
@@ -107,80 +79,17 @@
     
 }
 
--(void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
-    
-    switch (status) {
-        case kCLAuthorizationStatusAuthorizedAlways:
-            
-            self.isDisable = NO;
-            break;
-            
-        default:
-            
-            self.isDisable = YES;
-            break;
-    }
-    
-}
-
-
 #pragma mark Location methods
 
--(void)getCurrentLocation:(LocationBlock)location error:(ErrorBlock)errorBlock{
-    
-    [self isLocationDisableForApp] ? [self showSettingApp] : nil;
+-(void)getCurrentLocation:(LocationBlock)location error:(ErrorBlock)errorBlock statusLocation:(StatusBlock)statusBlock{
     
     [self.locationManager startUpdatingLocation];
     
-    _locationBlock = location;
-    _errorBlock = errorBlock;
-    
-}
-
--(BOOL)isLocationDisableForApp {
-    
-    if([CLLocationManager locationServicesEnabled] && [CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
-        
-        return YES;
-        
-    }
-    
-    return NO;
+    self.locationBlock = location;
+    self.errorBlock = errorBlock;
+    statusBlock([CLLocationManager authorizationStatus]);
 }
 
 #pragma mark - Settings
-
--(void)showSettingApp {
-    
-    
-    UIAlertController *alertController = [UIAlertController
-                                          alertControllerWithTitle:@"Location disable"
-                                          message:@""
-                                          preferredStyle:UIAlertControllerStyleAlert];
-    
-    UIAlertAction *openSettings = [UIAlertAction
-                                   actionWithTitle:@"Open settings"
-                                   style:UIAlertActionStyleDefault
-                                   handler:^(UIAlertAction *action)
-                                   {
-                                       
-                                       [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-                                       
-                                   }];
-    
-    UIAlertAction *cancel = [UIAlertAction
-                             actionWithTitle:@"Cancel"
-                             style:UIAlertActionStyleCancel
-                             handler:^(UIAlertAction *action)
-                             {}];
-    
-    [alertController addAction:openSettings];
-    
-    [alertController addAction:cancel];
-    
-    [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:alertController animated:YES completion:nil];
-    
-    
-}
 
 @end

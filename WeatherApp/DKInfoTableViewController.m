@@ -10,6 +10,11 @@
 #import "DKCoreDataManager.h"
 #import "DKInfoTableViewCell.h"
 
+static NSString * const indetifier = @"DKInfoTableViewCell";
+static NSString * const title = @"History";
+static CGFloat const height = 100.f;
+
+
 @interface DKInfoTableViewController ()
 
 @property (nonatomic) NSArray* arrayInfo;
@@ -21,7 +26,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.title = @"History";
+    self.title = title;
     
     [self prepareTableView];
     
@@ -29,7 +34,7 @@
 
 -(void)prepareTableView {
     
-    self.tableView.estimatedRowHeight = 100.f;
+    self.tableView.estimatedRowHeight = height;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     
 }
@@ -46,14 +51,11 @@
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    DKInfoTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"DKInfoTableViewCell"];
+    DKInfoTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:indetifier];
     
     DKInfoModel* info = [[DKCoreDataManager sharedInstance]convertInfoEntityToModelAtIndex:indexPath];
     
-    cell.labelCity.text = [NSString stringWithFormat:@"Adress: %@, %@",info.city,info.adress];
-    cell.labelTemp.text = [NSString stringWithFormat:@"Temperature: %@",info.temp];
-    cell.labelDate.text = [NSString stringWithFormat:@"Time: %@",info.dateString];
-    
+    [cell updateCellWithModel:info];
     
     return cell;
     

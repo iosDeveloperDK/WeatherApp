@@ -13,13 +13,11 @@
 
 typedef void(^LocationBlock)(DKLocationModel*location);
 typedef void(^ErrorBlock)(NSError*error);
+typedef void(^StatusBlock)(CLAuthorizationStatus status);
 
 @interface DKLocationManager : NSObject <CLLocationManagerDelegate>
 
-//if user disable location
-@property (nonatomic) BOOL isDisable;
-
--(void)getCurrentLocation:(LocationBlock)location error:(ErrorBlock)errorBlock;
+-(void)getCurrentLocation:(LocationBlock)location error:(ErrorBlock)errorBlock statusLocation:(StatusBlock)statusBlock;
 
 +(DKLocationManager*)sharedManager;
 

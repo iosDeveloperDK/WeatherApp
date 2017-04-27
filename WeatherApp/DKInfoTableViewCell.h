@@ -7,11 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DKModelData.h"
 
 @interface DKInfoTableViewCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UILabel *labelCity;
-@property (weak, nonatomic) IBOutlet UILabel *labelDate;
-@property (weak, nonatomic) IBOutlet UILabel *labelTemp;
+-(void)updateCellWithModel:(DKInfoModel*)model;
 
 @end

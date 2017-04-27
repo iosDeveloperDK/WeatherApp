@@ -10,7 +10,11 @@
 
 static NSString * const OpenWeatherMapKey = @"bb115bb9270e0eca298e514f001a4be8";
 static NSString * const OpenWeatherMapURL = @"http://api.openweathermap.org/data/2.5/weather?q=";
+static NSString * const OpenWeatherFormat = @"%@%@&units=metric&lang=ru&appid=%@";
+
 static NSString * const GoogleGeocoderURL = @"http://maps.googleapis.com/maps/api/geocode/json?latlng=";
+static NSString * const GoogleGeocoderFormat = @"%@%f,%f&sensor=false";
+
 
 @interface DKSessionManager ()
 
@@ -35,22 +39,22 @@ static NSString * const GoogleGeocoderURL = @"http://maps.googleapis.com/maps/ap
     return manager;
 }
 
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
+-(NSURLSession*)session {
+
+    if (!_session) {
         
-        self.session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+        _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
         
     }
-    return self;
+    return _session;
+    
 }
 
 #pragma mark - Weather
 
 -(void)getCurrentWeather:(WeatherBlock)successBlock error:(ErrorBlock)errorBlock withLocation:(DKLocationModel*)location {
     
-    NSString* str = [NSString stringWithFormat:@"%@%@&units=metric&lang=ru&appid=%@" ,OpenWeatherMapURL,[location.city stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]],OpenWeatherMapKey];
+    NSString* str = [NSString stringWithFormat:OpenWeatherFormat,OpenWeatherMapURL,[location.city stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]],OpenWeatherMapKey];
     
     NSURL *url = [NSURL URLWithString:str];
     
@@ -58,17 +62,30 @@ static NSString * const GoogleGeocoderURL = @"http://maps.googleapis.com/maps/ap
         
         if (data && data.length > 0) {
             
-            NSDictionary* json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+            NSError* error;
             
-            DKWeatherModel* weather = [[DKWeatherModel alloc]initWhithDictinary:json];
+            NSDictionary* json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
             
-            dispatch_async(dispatch_get_main_queue(), ^{
+            if (!error) {
                 
-                successBlock(weather);
-
-            });
+                DKWeatherModel* weather = [[DKWeatherModel alloc]initWhithDictinary:json];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    successBlock(weather);
+                    
+                });
+                
+            }else {
             
-            
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    errorBlock(error);
+                    
+                });
+                
+            }
+     
         }else {
             
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -87,7 +104,7 @@ static NSString * const GoogleGeocoderURL = @"http://maps.googleapis.com/maps/ap
 
 -(void)geocoder:(CLLocation*)location success:(CityBlock)successBlock error:(ErrorBlock)errorBlock{
 
-    NSString* str = [NSString stringWithFormat:@"%@%f,%f&sensor=false" ,GoogleGeocoderURL,location.coordinate.latitude,location.coordinate.longitude];
+    NSString* str = [NSString stringWithFormat:GoogleGeocoderFormat,GoogleGeocoderURL,location.coordinate.latitude,location.coordinate.longitude];
     
     NSURL *url = [NSURL URLWithString:str];
     
@@ -95,16 +112,30 @@ static NSString * const GoogleGeocoderURL = @"http://maps.googleapis.com/maps/ap
         
         if (data && data.length > 0) {
             
-            NSDictionary* json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+            NSError* error;
             
-            DKLocationModel* weather = [[DKLocationModel alloc]initWhithDictinary:json];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
+            NSDictionary* json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+
+            if (!error) {
                 
-                successBlock(weather);
+                DKLocationModel* location = [[DKLocationModel alloc]initWhithDictinary:json];
                 
-            });
-            
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    successBlock(location);
+                    
+                });
+                
+            }else {
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    
+                    errorBlock(error);
+                    
+                });
+                
+            }
+
             
         }else {
             

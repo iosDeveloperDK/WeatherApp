@@ -8,8 +8,13 @@
 
 #import "DKCoreDataManager.h"
 
-
+static NSString * const CoreDataName = @"WeatherApp";
+static NSString * const SQLName = @"CoreDataSqlite";
 static NSString * const EntityInfo = @"InfoEntity";
+static NSString * const Extenshion = @"momd";
+
+static NSString * const sortKey = @"time";
+static NSString * const historyKey = @"empty";
 
 @interface DKCoreDataManager ()
 
@@ -43,12 +48,11 @@ static NSString * const EntityInfo = @"InfoEntity";
     self = [super init];
     if (self) {
         
-        [self managedObjectContextWithCoreDataName:@"WeatherApp" sqliteName:@"CoreDataSqlite"];
+        [self managedObjectContextWithCoreDataName:CoreDataName sqliteName:SQLName];
         
     }
     return self;
 }
-
 
 
 - (void)saveContext
@@ -67,11 +71,9 @@ static NSString * const EntityInfo = @"InfoEntity";
 
 -(void)saveInfo:(DKInfoModel*)info {
     
-    [[NSUserDefaults standardUserDefaults] setObject:@(1) forKey:@"empty"];
+    [[NSUserDefaults standardUserDefaults] setObject:@(1) forKey:historyKey];
     
-    NSManagedObjectContext *context = (self.fetchedResultsController).managedObjectContext;
-    
-    InfoEntity *entity = [[InfoEntity alloc] initWithContext:context];
+    InfoEntity* entity = [NSEntityDescription insertNewObjectForEntityForName:EntityInfo inManagedObjectContext:_managedObjectContext];
     
     entity.city = info.city;
     entity.temp = info.temp;
@@ -135,8 +137,9 @@ static NSString * const EntityInfo = @"InfoEntity";
 - (NSManagedObjectModel *)managedObjectModelWithCoreDataName:(NSString *)coreDataName
 {
     NSURL *modelURL = [[NSBundle mainBundle] URLForResource:coreDataName
-                                              withExtension:@"momd"];
+                                              withExtension:Extenshion];
     _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    
     return _managedObjectModel;
 }
 
@@ -157,7 +160,7 @@ static NSString * const EntityInfo = @"InfoEntity";
     
     NSFetchRequest<InfoEntity *> *fetchRequest = InfoEntity.fetchRequest;
     
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"time" ascending:NO];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:sortKey ascending:NO];
     
     fetchRequest.sortDescriptors = @[sortDescriptor];
     

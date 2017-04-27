@@ -41,6 +41,36 @@
     
 }
 
+-(void)showAppSetting {
+    
+    UIAlertController *alertController = [UIAlertController
+                                          alertControllerWithTitle:@"Location disable"
+                                          message:@""
+                                          preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *openSettings = [UIAlertAction
+                                   actionWithTitle:@"Open settings"
+                                   style:UIAlertActionStyleDefault
+                                   handler:^(UIAlertAction *action)
+                                   {
+                                       
+                                       [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+                                       
+                                   }];
+    
+    UIAlertAction *cancel = [UIAlertAction
+                             actionWithTitle:@"Cancel"
+                             style:UIAlertActionStyleCancel
+                             handler:^(UIAlertAction *action)
+                             {}];
+    
+    [alertController addAction:openSettings];
+    
+    [alertController addAction:cancel];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
+    
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
