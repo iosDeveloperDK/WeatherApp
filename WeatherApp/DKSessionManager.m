@@ -40,7 +40,7 @@ static NSString * const GoogleGeocoderFormat = @"%@%f,%f&sensor=false";
 }
 
 -(NSURLSession*)session {
-
+    
     if (!_session) {
         
         _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
@@ -77,7 +77,7 @@ static NSString * const GoogleGeocoderFormat = @"%@%f,%f&sensor=false";
                 });
                 
             }else {
-            
+                
                 dispatch_async(dispatch_get_main_queue(), ^{
                     
                     errorBlock(error);
@@ -85,13 +85,13 @@ static NSString * const GoogleGeocoderFormat = @"%@%f,%f&sensor=false";
                 });
                 
             }
-     
+            
         }else {
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 errorBlock(error);
-
+                
             });
             
         }
@@ -103,7 +103,7 @@ static NSString * const GoogleGeocoderFormat = @"%@%f,%f&sensor=false";
 #pragma mark - Location
 
 -(void)geocoder:(CLLocation*)location success:(CityBlock)successBlock error:(ErrorBlock)errorBlock{
-
+    
     NSString* str = [NSString stringWithFormat:GoogleGeocoderFormat,GoogleGeocoderURL,location.coordinate.latitude,location.coordinate.longitude];
     
     NSURL *url = [NSURL URLWithString:str];
@@ -115,7 +115,7 @@ static NSString * const GoogleGeocoderFormat = @"%@%f,%f&sensor=false";
             NSError* error;
             
             NSDictionary* json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-
+            
             if (!error) {
                 
                 DKLocationModel* location = [[DKLocationModel alloc]initWhithDictinary:json];
@@ -135,7 +135,7 @@ static NSString * const GoogleGeocoderFormat = @"%@%f,%f&sensor=false";
                 });
                 
             }
-
+            
             
         }else {
             
@@ -148,7 +148,7 @@ static NSString * const GoogleGeocoderFormat = @"%@%f,%f&sensor=false";
         }
         
     }] resume];
-
+    
 }
 
 

@@ -1,0 +1,18 @@
+/* 
+  Localizable.strings
+  WeatherApp
+
+  Created by Denis on 27.04.17.
+  Copyright © 2017 Denis. All rights reserved.
+*/
+
+"title_main"="Главная";
+"title_history"="История";
+"title_weather"="Погода";
+"try_again"="Повторить";
+"location_disable"="Геолокация отключена";
+"open_settings"="Открыть настройки";
+"cancel"="Отмена";
+"adress"="Адрес";
+"temp"="Температура";
+"time"="Время";

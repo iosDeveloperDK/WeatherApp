@@ -37,7 +37,7 @@
 }
 
 -(CLLocationManager*)locationManager {
-
+    
     if (!_locationManager) {
         
         _locationManager = [[CLLocationManager alloc]init];
@@ -62,7 +62,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             
             self.locationBlock(city);
-
+            
         });
         
     } error:^(NSError *error) {
@@ -70,7 +70,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             
             self.errorBlock(error);
-
+            
         });
         
     }];
