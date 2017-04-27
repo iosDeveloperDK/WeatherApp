@@ -9,7 +9,6 @@
 #import "DKWeatherViewController.h"
 #import "DKCoreDataManager.h"
 
-static NSString * const title = @"Weather";
 static NSString * const cityFormat = @"%@, %@";
 
 @interface DKWeatherViewController ()
@@ -24,9 +23,9 @@ static NSString * const cityFormat = @"%@, %@";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    self.title = title;
-
+    
+    self.title = NSLocalizedString(@"title_weather", nil);
+    
     [self getCurrentWeather];
     
 }
@@ -42,11 +41,11 @@ static NSString * const cityFormat = @"%@, %@";
 #pragma mark - Weather method
 
 -(void)getCurrentWeather {
-
+    
     [self.activityView startActivity];
-
+    
     __weak typeof(self)weakSelf = self;
-
+    
     [[DKSessionManager sharedManager] getCurrentWeather:^(DKWeatherModel *weather) {
         
         [weakSelf.activityView stopActivity];
@@ -58,7 +57,7 @@ static NSString * const cityFormat = @"%@, %@";
     } error:^(NSError *error) {
         
         [weakSelf.activityView stopActivity];
-
+        
         [weakSelf showAlertView:[error localizedDescription]];
         
     } withLocation:self.location];
@@ -66,11 +65,11 @@ static NSString * const cityFormat = @"%@, %@";
 }
 
 -(void)updateLabelWithBodel:(DKWeatherModel*)model {
-
+    
     self.labelCity.text = [NSString stringWithFormat:cityFormat, self.location.country, self.location.city];
     self.labelDesc.text = model.type;
     self.labelTemp.text = model.temp;
-
+    
 }
 
 @end

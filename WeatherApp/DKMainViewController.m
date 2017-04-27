@@ -9,7 +9,6 @@
 #import "DKMainViewController.h"
 #import "DKWeatherViewController.h"
 
-static NSString * const title = @"Main";
 static NSString * const indetifierVC = @"DKWeatherViewController";
 static NSString * const historyKey = @"empty";
 static NSTimeInterval const duration = 0.4;
@@ -29,7 +28,7 @@ static NSString * const labelLocationFormat = @"%@, %@, %@";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.title = title;
+    self.title = NSLocalizedString(@"title_main", nil);
     
 }
 
@@ -38,11 +37,11 @@ static NSString * const labelLocationFormat = @"%@, %@, %@";
 - (IBAction)actionDetectLocation:(UIButton *)sender {
     
     __weak typeof(self)weakSelf = self;
-
+    
     [[DKLocationManager sharedManager] getCurrentLocation:^(DKLocationModel *location) {
         
         __strong typeof(self)strongSelf = weakSelf;
-
+        
         self.currenLocation = location;
         
         strongSelf.labelLocation.text = [NSString stringWithFormat:labelLocationFormat, location.country, location.city, location.address];
@@ -54,9 +53,9 @@ static NSString * const labelLocationFormat = @"%@, %@, %@";
     } error:^(NSError *error) {
         
         __strong typeof(self)strongSelf = weakSelf;
-
+        
         [strongSelf.activityView stopActivity];
-
+        
         [strongSelf showAlertView:[error localizedDescription]];
         
     } statusLocation:^(CLAuthorizationStatus status) {
@@ -70,13 +69,13 @@ static NSString * const labelLocationFormat = @"%@, %@, %@";
             case kCLAuthorizationStatusAuthorizedAlways:
                 [weakSelf.activityView startActivity];
                 break;
-
+                
             default:
                 break;
         }
         
     }];
-
+    
 }
 
 
@@ -93,7 +92,7 @@ static NSString * const labelLocationFormat = @"%@, %@, %@";
 #pragma mark - Help methods
 
 -(void)showWeatherButtonAnimated {
-
+    
     [UIView transitionWithView:self.buttonShowWeather
                       duration:duration
                        options:UIViewAnimationOptionTransitionCrossDissolve
@@ -106,7 +105,7 @@ static NSString * const labelLocationFormat = @"%@, %@, %@";
 }
 
 -(void)viewWillAppear:(BOOL)animated {
-
+    
     [super viewWillAppear:animated];
     
     self.buttonShowHistory.hidden = ![[NSUserDefaults standardUserDefaults] boolForKey:historyKey];

@@ -1,0 +1,24 @@
+
+/* Class = "UILabel"; text = " "; ObjectID = "3Cc-bM-fBD"; */
+"3Cc-bM-fBD.text" = " ";
+
+/* Class = "UILabel"; text = " "; ObjectID = "3oj-BK-UOr"; */
+"3oj-BK-UOr.text" = " ";
+
+/* Class = "UIButton"; normalTitle = "Detect Location"; ObjectID = "FIO-kR-t1f"; */
+"FIO-kR-t1f.normalTitle" = "Поиск местоположения";
+
+/* Class = "UIButton"; normalTitle = "Show Weather"; ObjectID = "Qzd-TQ-zjv"; */
+"Qzd-TQ-zjv.normalTitle" = "Показать погоду";
+
+/* Class = "UILabel"; text = " "; ObjectID = "cBw-AW-AO4"; */
+"cBw-AW-AO4.text" = " ";
+
+/* Class = "UIButton"; normalTitle = "Show history"; ObjectID = "hd9-qr-a1P"; */
+"hd9-qr-a1P.normalTitle" = "Показать историю";
+
+/* Class = "UIButton"; normalTitle = "Refresh"; ObjectID = "vfM-eK-89h"; */
+"vfM-eK-89h.normalTitle" = "Обновить";
+
+/* Class = "UILabel"; text = " "; ObjectID = "zfK-Vl-6qh"; */
+"zfK-Vl-6qh.text" = " ";

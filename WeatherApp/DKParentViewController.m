@@ -16,7 +16,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
     self.activityView = [[DKActivityView alloc]initWithFrame:self.view.frame];
     
     [self.view addSubview:self.activityView];
@@ -25,7 +25,7 @@
 -(void)showAlertView:(NSString*)message {
     
     UIAlertController *alertController = [UIAlertController
-                                          alertControllerWithTitle:@"Try again"
+                                          alertControllerWithTitle:NSLocalizedString(@"try_again", nil)
                                           message:message
                                           preferredStyle:UIAlertControllerStyleAlert];
     
@@ -44,12 +44,12 @@
 -(void)showAppSetting {
     
     UIAlertController *alertController = [UIAlertController
-                                          alertControllerWithTitle:@"Location disable"
+                                          alertControllerWithTitle:NSLocalizedString(@"location_disable", nil)
                                           message:@""
                                           preferredStyle:UIAlertControllerStyleAlert];
     
     UIAlertAction *openSettings = [UIAlertAction
-                                   actionWithTitle:@"Open settings"
+                                   actionWithTitle:NSLocalizedString(@"open_settings", nil)
                                    style:UIAlertActionStyleDefault
                                    handler:^(UIAlertAction *action)
                                    {
@@ -59,7 +59,7 @@
                                    }];
     
     UIAlertAction *cancel = [UIAlertAction
-                             actionWithTitle:@"Cancel"
+                             actionWithTitle:NSLocalizedString(@"cancel", nil)
                              style:UIAlertActionStyleCancel
                              handler:^(UIAlertAction *action)
                              {}];

@@ -11,7 +11,6 @@
 #import "DKInfoTableViewCell.h"
 
 static NSString * const indetifier = @"DKInfoTableViewCell";
-static NSString * const title = @"History";
 static CGFloat const height = 100.f;
 
 
@@ -26,7 +25,7 @@ static CGFloat const height = 100.f;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.title = title;
+    self.title = NSLocalizedString(@"title_history", nil);
     
     [self prepareTableView];
     

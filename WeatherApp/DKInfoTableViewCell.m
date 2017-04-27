@@ -8,9 +8,9 @@
 
 #import "DKInfoTableViewCell.h"
 
-static NSString * const adressFormat = @"Adress: %@, %@";
-static NSString * const temperatureFormat = @"Temperature: %@";
-static NSString * const timeFormat = @"Time: %@";
+static NSString * const adressFormat = @"%@: %@, %@";
+static NSString * const temperatureFormat = @"%@: %@";
+static NSString * const timeFormat = @"%@: %@";
 
 @interface DKInfoTableViewCell ()
 
@@ -23,11 +23,11 @@ static NSString * const timeFormat = @"Time: %@";
 @implementation DKInfoTableViewCell
 
 -(void)updateCellWithModel:(DKInfoModel*)model {
-
-    self.labelCity.text = [NSString stringWithFormat:adressFormat,model.city,model.adress];
-    self.labelTemp.text = [NSString stringWithFormat:temperatureFormat,model.temp];
-    self.labelDate.text = [NSString stringWithFormat:timeFormat,model.dateString];
-
+    
+    self.labelCity.text = [NSString stringWithFormat:adressFormat,NSLocalizedString(@"adress", nil),model.city,model.adress];
+    self.labelTemp.text = [NSString stringWithFormat:temperatureFormat,NSLocalizedString(@"temp", nil),model.temp];
+    self.labelDate.text = [NSString stringWithFormat:timeFormat,NSLocalizedString(@"time", nil),model.dateString];
+    
 }
 
 - (void)awakeFromNib {
@@ -37,7 +37,7 @@ static NSString * const timeFormat = @"Time: %@";
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
+    
     // Configure the view for the selected state
 }
 
